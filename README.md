@@ -52,9 +52,7 @@ A ser detalhado a partir da etapa de implementação (Sprint 3 em diante), quand
 
 Previsão de uso, uma vez implementado:
 
-bash
-gcc -o pse_em_acao src/*.c
-./pse_em_acao
+
 Planejamento (sprints)
 Sprint	Período	Atividades
 Sprint 1	Semana 1	Levantamento do problema, definição do tema, escopo, usuários e requisitos.
