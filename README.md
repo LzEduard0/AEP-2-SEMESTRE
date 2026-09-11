@@ -67,11 +67,14 @@ Detalhes completos de riscos do projeto e mitigação estão na seção 3.6 do d
 
 Equipe
 
-Nome	Curso	
+Nome	
 
 Luiz Eduardo santos Silva
+
 Romulo Sotti Demito
+
 Lucas Pescaroli Bastos
+
 
 Status do projeto
 
