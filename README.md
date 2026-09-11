@@ -66,7 +66,9 @@ Sprint 6	Semana 6	Testes finais, revisão de código, documentação técnica e 
 Detalhes completos de riscos do projeto e mitigação estão na seção 3.6 do documento em docs/.
 
 Equipe
+
 Nome	Curso	
+
 Luiz Eduardo santos Silva
 Romulo Sotti Demito
 Lucas Pescaroli Bastos
