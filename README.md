@@ -1,24 +1,25 @@
-PSE em Ação
+PSE em Ação:
 
 Sistema de Planejamento e Acompanhamento de Ações de Saúde na Escola
 
 Tema aplicado: Prevenção ao uso de álcool e outras drogas Disciplina / Projeto: Atividade Extensionista Prática (AEP) — UNICESUMAR Cursos: Engenharia de Software e Análise e Desenvolvimento de Sistemas Ano: 2026
 
-Sobre o projeto
+Sobre o projeto:
 
 O PSE em Ação é um sistema em linguagem C, executado em terminal, que apoia uma equipe intersetorial fictícia (IntegraPSE) — profissionais das secretarias de saúde e educação, coordenadores escolares e profissionais de referência — a planejar, registrar e acompanhar ações de prevenção ao uso de álcool e outras drogas realizadas em escolas participantes do Programa Saúde na Escola (PSE).
 
 O sistema trabalha exclusivamente com dados fictícios e informações coletivas sobre as ações realizadas (nunca dados individuais ou identificáveis de estudantes), preservando a privacidade dos adolescentes atendidos.
 
-Problema de pesquisa
+Problema de pesquisa:
 
 Como uma aplicação desenvolvida em linguagem C pode auxiliar uma equipe escolar e de saúde a planejar, registrar e acompanhar ações de prevenção ao uso de álcool e outras drogas no âmbito do PSE, apresentando informações claras sobre a execução dessas ações e preservando a privacidade dos estudantes?
 
-Objetivo geral
+Objetivo geral:
 
 Desenvolver um sistema em linguagem C, executado em terminal, que permita a uma equipe intersetorial planejar, registrar e acompanhar ações de prevenção ao uso de álcool e outras drogas realizadas em escolas participantes do PSE, consolidando informações coletivas sem armazenar dados sensíveis ou identificáveis de estudantes.
 
-Objetivos específicos
+Objetivos específicos:
+
 Estruturar um cadastro de ações de prevenção contendo código, escola, data prevista, público-alvo, responsável, quantidade prevista de participantes e situação da ação.
 Implementar mecanismos de busca por código, escola ou tema.
 Disponibilizar a atualização da situação de cada ação (planejada, realizada ou cancelada), com registro da quantidade efetiva de participantes.
@@ -65,9 +66,8 @@ Sprint 6	Semana 6	Testes finais, revisão de código, documentação técnica e 
 
 Detalhes completos de riscos do projeto e mitigação estão na seção 3.6 do documento em docs/.
 
-Equipe
 
-Nome	
+Nome:
 
 Luiz Eduardo santos Silva
 
