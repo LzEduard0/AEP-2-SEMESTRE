@@ -12,7 +12,7 @@ struct Acao {
     char responsavel[50];
     int qtdPrevista;
     int qtdEfetiva;
-    int situacao; // 1 planejada, 2 realizada, 3 cancelada
+    int situacao; 
 };
 
 struct Acao acoes[100];
