@@ -1,240 +1,281 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+#include <ctype.h>
 
-struct Participante {
+struct Acao {
     int codigo;
-    char nome[50];
-    int situacao;
-    int registrado;
+    char escola[60];
+    char tema[60];
+    int dia, mes, ano;
+    char publico[40];
+    char responsavel[50];
+    int qtdPrevista;
+    int qtdEfetiva;
+    int situacao; // 1 planejada, 2 realizada, 3 cancelada
 };
 
-struct Participante participantes[100];
+struct Acao acoes[100];
 int total = 0;
 
-void cadastrar() {
-    system("cls");
-    printf("=== CADASTRAR PARTICIPANTE ===\n");
-
-    if (total < 100) {
-        printf("Digite o codigo: ");
-        scanf("%d", &participantes[total].codigo);
-
-        printf("Digite o nome: ");
-        scanf(" %49[^\n]", participantes[total].nome);
-
-        participantes[total].situacao = 1;
-        participantes[total].registrado = 0;
-
-        total++;
-        printf("\nCadastro realizado com sucesso!\n");
-    } else {
-        printf("Limite de cadastros atingido!\n");
+void lerLinha(char texto[], int tamanho) {
+    int c;
+    if (fgets(texto, tamanho, stdin) == NULL) {
+        printf("\nEntrada encerrada.\n");
+        exit(0);
     }
+    if (strchr(texto, '\n') != NULL) {
+        texto[strcspn(texto, "\n")] = '\0';
+    } else {
+        while ((c = getchar()) != '\n' && c != EOF) { }
+    }
+}
 
+int lerInteiro(const char mensagem[]) {
+    char texto[100], extra;
+    int numero;
+    while (1) {
+        printf("%s", mensagem);
+        lerLinha(texto, sizeof(texto));
+        if (sscanf(texto, " %d %c", &numero, &extra) == 1) return numero;
+        printf("Numero invalido! Tente novamente.\n");
+    }
+}
+
+void lerObrigatorio(const char mensagem[], char destino[], int tamanho) {
+    int i, preenchido;
+    while (1) {
+        printf("%s", mensagem);
+        lerLinha(destino, tamanho);
+        preenchido = 0;
+        for (i = 0; destino[i] != '\0'; i++) {
+            if (!isspace((unsigned char)destino[i])) preenchido = 1;
+        }
+        if (preenchido) return;
+        printf("Erro: campo obrigatorio vazio.\n");
+    }
+}
+
+int dataValida(int dia, int mes, int ano) {
+    int diasMes[] = {0,31,28,31,30,31,30,31,31,30,31,30,31};
+    if (ano < 1 || mes < 1 || mes > 12) return 0;
+    if (mes == 2 && ((ano % 4 == 0 && ano % 100 != 0) || ano % 400 == 0)) diasMes[2] = 29;
+    return dia >= 1 && dia <= diasMes[mes];
+}
+
+int buscarCodigo(int codigo) {
+    int i;
+    for (i = 0; i < total; i++) {
+        if (acoes[i].codigo == codigo) return i;
+    }
+    return -1;
+}
+
+int contemTexto(char texto[], char busca[]) {
+    int i, j;
+    if (busca[0] == '\0') return 0;
+    for (i = 0; texto[i] != '\0'; i++) {
+        j = 0;
+        while (busca[j] != '\0' && texto[i+j] != '\0' &&
+               tolower((unsigned char)texto[i+j]) == tolower((unsigned char)busca[j])) j++;
+        if (busca[j] == '\0') return 1;
+    }
+    return 0;
+}
+
+void mostrarAcao(int i) {
+    printf("\n-------------------------\n");
+    printf("Codigo: %d\n", acoes[i].codigo);
+    printf("Escola: %s\n", acoes[i].escola);
+    printf("Tema: %s\n", acoes[i].tema);
+    printf("Data: %02d/%02d/%04d\n", acoes[i].dia, acoes[i].mes, acoes[i].ano);
+    printf("Publico-alvo: %s\n", acoes[i].publico);
+    printf("Responsavel: %s\n", acoes[i].responsavel);
+    printf("Participantes previstos: %d\n", acoes[i].qtdPrevista);
+    printf("Situacao: %s\n", acoes[i].situacao == 1 ? "Planejada" : acoes[i].situacao == 2 ? "Realizada" : "Cancelada");
+    if (acoes[i].situacao == 2) printf("Participantes efetivos: %d\n", acoes[i].qtdEfetiva);
+}
+
+void cadastrar() {
+    char data[80], extra;
+    int codigo, dia, mes, ano, quantidade;
+    system("cls");
+    printf("=== CADASTRAR ACAO ===\n");
+    if (total >= 100) {
+        printf("Limite de armazenamento atingido!\n");
+        system("pause");
+        return;
+    }
+    while (1) {
+        codigo = lerInteiro("Digite o codigo: ");
+        if (codigo <= 0) printf("Codigo deve ser positivo!\n");
+        else if (buscarCodigo(codigo) != -1) printf("Erro: codigo ja cadastrado.\n");
+        else break;
+    }
+    acoes[total].codigo = codigo;
+    lerObrigatorio("Digite a escola: ", acoes[total].escola, 60);
+    lerObrigatorio("Digite o tema: ", acoes[total].tema, 60);
+    while (1) {
+        printf("Digite a data (dd/mm/aaaa): ");
+        lerLinha(data, sizeof(data));
+        if (sscanf(data, " %d/%d/%d %c", &dia, &mes, &ano, &extra) == 3 &&
+            dataValida(dia, mes, ano)) break;
+        printf("Erro: data invalida.\n");
+    }
+    acoes[total].dia = dia;
+    acoes[total].mes = mes;
+    acoes[total].ano = ano;
+    lerObrigatorio("Digite o publico-alvo: ", acoes[total].publico, 40);
+    lerObrigatorio("Digite o responsavel: ", acoes[total].responsavel, 50);
+    while (1) {
+        quantidade = lerInteiro("Quantidade prevista de participantes: ");
+        if (quantidade > 0) break;
+        printf("Erro: quantidade invalida (deve ser maior que zero).\n");
+    }
+    acoes[total].qtdPrevista = quantidade;
+    acoes[total].qtdEfetiva = 0;
+    acoes[total].situacao = 1;
+    total++;
+    printf("\nAcao cadastrada com sucesso! (%d/100)\n", total);
     system("pause");
 }
 
 void listar() {
     int i;
-
     system("cls");
-    printf("=== LISTAR PARTICIPANTES ===\n");
-
-    if (total == 0) {
-        printf("Nenhum participante cadastrado.\n");
-    } else {
-        for (i = 0; i < total; i++) {
-            printf("-------------------------\n");
-            printf("Codigo: %d\n", participantes[i].codigo);
-            printf("Nome: %s\n", participantes[i].nome);
-            printf("Situacao: %s\n",
-                participantes[i].situacao == 1 ? "Ativo" : "Inativo");
-            printf("Registrado: %s\n",
-                participantes[i].registrado == 1 ? "Sim" : "Nao");
-        }
-    }
-
+    printf("=== LISTAR ACOES ===\n");
+    if (total == 0) printf("Nenhuma acao cadastrada ate o momento.\n");
+    for (i = 0; i < total; i++) mostrarAcao(i);
     system("pause");
 }
 
 void pesquisar() {
-    int codigoBusca, i, achou = 0;
-
+    int opcao, codigo, i, encontrados = 0;
+    char busca[60];
     system("cls");
-    printf("=== PESQUISAR PARTICIPANTE ===\n");
-    printf("Digite o codigo: ");
-    scanf("%d", &codigoBusca);
-
-    for (i = 0; i < total; i++) {
-        if (participantes[i].codigo == codigoBusca) {
-            printf("\nCodigo: %d\n", participantes[i].codigo);
-            printf("Nome: %s\n", participantes[i].nome);
-            printf("Situacao: %s\n",
-                participantes[i].situacao == 1 ? "Ativo" : "Inativo");
-            printf("Registrado: %s\n",
-                participantes[i].registrado == 1 ? "Sim" : "Nao");
-
-            achou = 1;
-            break;
+    printf("=== PESQUISAR ACAO ===\n");
+    printf("1 - Por codigo\n2 - Por escola\n3 - Por tema\n");
+    opcao = lerInteiro("Escolha: ");
+    if (opcao == 1) {
+        codigo = lerInteiro("Digite o codigo: ");
+        i = buscarCodigo(codigo);
+        if (i == -1) printf("Registro inexistente.\n");
+        else mostrarAcao(i);
+    } else if (opcao == 2 || opcao == 3) {
+        lerObrigatorio("Digite o texto para pesquisar: ", busca, 60);
+        for (i = 0; i < total; i++) {
+            if ((opcao == 2 && contemTexto(acoes[i].escola, busca)) ||
+                (opcao == 3 && contemTexto(acoes[i].tema, busca))) {
+                mostrarAcao(i);
+                encontrados++;
+            }
         }
-    }
-
-    if (achou == 0) {
-        printf("\nParticipante nao encontrado.\n");
-    }
-
+        if (encontrados == 0) printf("Nenhuma acao encontrada.\n");
+        else printf("\n%d acao(oes) encontrada(s).\n", encontrados);
+    } else printf("Opcao invalida!\n");
     system("pause");
 }
 
 void atualizar() {
-    int codigoBusca, i, achou = 0;
-    int novaSituacao;
-
+    int codigo, i, situacao, quantidade;
     system("cls");
     printf("=== ATUALIZAR SITUACAO ===\n");
-    printf("Digite o codigo: ");
-    scanf("%d", &codigoBusca);
-
-    for (i = 0; i < total; i++) {
-        if (participantes[i].codigo == codigoBusca) {
-            printf("1 - Ativo\n");
-            printf("2 - Inativo\n");
-            printf("Escolha a situacao: ");
-            scanf("%d", &novaSituacao);
-
-            if (novaSituacao == 1) {
-                participantes[i].situacao = 1;
-                printf("\nSituacao atualizada!\n");
-            } else if (novaSituacao == 2) {
-                participantes[i].situacao = 0;
-                printf("\nSituacao atualizada!\n");
-            } else {
-                printf("\nSituacao invalida!\n");
+    codigo = lerInteiro("Digite o codigo da acao: ");
+    i = buscarCodigo(codigo);
+    if (i == -1) {
+        printf("Registro inexistente.\n");
+        system("pause");
+        return;
+    }
+    printf("Situacao atual: %s\n", acoes[i].situacao == 1 ? "Planejada" : acoes[i].situacao == 2 ? "Realizada" : "Cancelada");
+    printf("1 - Planejada\n2 - Realizada\n3 - Cancelada\n");
+    situacao = lerInteiro("Nova situacao: ");
+    if (situacao < 1 || situacao > 3) printf("Situacao invalida!\n");
+    else {
+        if (situacao == 2) {
+            while (1) {
+                quantidade = lerInteiro("Quantidade efetiva de participantes: ");
+                if (quantidade >= 0) break;
+                printf("Quantidade nao pode ser negativa!\n");
             }
-
-            achou = 1;
-            break;
-        }
+            acoes[i].qtdEfetiva = quantidade;
+        } else acoes[i].qtdEfetiva = 0;
+        acoes[i].situacao = situacao;
+        printf("Situacao atualizada com sucesso!\n");
     }
-
-    if (achou == 0) {
-        printf("\nParticipante nao encontrado.\n");
-    }
-
     system("pause");
 }
 
 void registrar() {
-    int codigoBusca, i, achou = 0;
-
+    int codigo, i, quantidade;
     system("cls");
-    printf("=== REGISTRAR PARTICIPANTE ===\n");
-    printf("Digite o codigo: ");
-    scanf("%d", &codigoBusca);
-
-    for (i = 0; i < total; i++) {
-        if (participantes[i].codigo == codigoBusca) {
-
-            if (participantes[i].situacao == 1) {
-                participantes[i].registrado = 1;
-                printf("\nRegistro realizado com sucesso!\n");
-            } else {
-                printf("\nParticipante inativo!\n");
-            }
-
-            achou = 1;
-            break;
+    printf("=== REGISTRAR PARTICIPANTES ===\n");
+    codigo = lerInteiro("Digite o codigo da acao: ");
+    i = buscarCodigo(codigo);
+    if (i == -1) printf("Registro inexistente.\n");
+    else if (acoes[i].situacao != 2) printf("So e possivel registrar participantes de acoes realizadas.\n");
+    else {
+        printf("Previstos: %d | Registrados: %d\n", acoes[i].qtdPrevista, acoes[i].qtdEfetiva);
+        while (1) {
+            quantidade = lerInteiro("Nova quantidade efetiva: ");
+            if (quantidade >= 0) break;
+            printf("Quantidade nao pode ser negativa!\n");
         }
+        acoes[i].qtdEfetiva = quantidade;
+        printf("Participantes registrados com sucesso!\n");
     }
-
-    if (achou == 0) {
-        printf("\nParticipante nao encontrado.\n");
-    }
-
     system("pause");
 }
 
 void resumo() {
-    int i;
-    int ativos = 0;
-    int inativos = 0;
-    int registrados = 0;
-
+    int i, planejadas = 0, realizadas = 0, canceladas = 0;
+    int previstos = 0, previstosRealizadas = 0, efetivos = 0;
     system("cls");
-    printf("=== RESUMO DO SISTEMA ===\n");
-
+    printf("=== RESUMO GERAL ===\n");
     for (i = 0; i < total; i++) {
-        if (participantes[i].situacao == 1) {
-            ativos++;
-        } else {
-            inativos++;
-        }
-
-        if (participantes[i].registrado == 1) {
-            registrados++;
-        }
+        previstos += acoes[i].qtdPrevista;
+        if (acoes[i].situacao == 1) planejadas++;
+        else if (acoes[i].situacao == 2) {
+            realizadas++;
+            efetivos += acoes[i].qtdEfetiva;
+            previstosRealizadas += acoes[i].qtdPrevista;
+        } else canceladas++;
     }
-
-    printf("Total de participantes: %d\n", total);
-    printf("Participantes ativos: %d\n", ativos);
-    printf("Participantes inativos: %d\n", inativos);
-    printf("Participantes registrados: %d\n", registrados);
-
+    printf("Total de acoes: %d\n", total);
+    printf("Planejadas: %d\n", planejadas);
+    printf("Realizadas: %d\n", realizadas);
+    printf("Canceladas: %d\n", canceladas);
+    printf("Participantes previstos (todas): %d\n", previstos);
+    printf("Participantes efetivos: %d\n", efetivos);
+    if (previstosRealizadas > 0)
+        printf("Percentual de participacao: %.1f%%\n", 100.0 * efetivos / previstosRealizadas);
+    else printf("Percentual de participacao: nao calculavel\n");
     system("pause");
 }
 
 int main() {
-    int opcao = 0;
-
-    while (opcao != 7) {
+    int opcao = -1;
+    while (opcao != 0) {
         system("cls");
-
-        printf("=== SISTEMA DE PARTICIPANTES ===\n");
-        printf("01 - Cadastrar participante\n");
-        printf("02 - Listar participantes\n");
-        printf("03 - Pesquisar participante\n");
+        printf("=== PSE EM ACAO - PREVENCAO AO ALCOOL E DROGAS ===\n");
+        printf("01 - Cadastrar acao\n");
+        printf("02 - Listar acoes\n");
+        printf("03 - Pesquisar acao\n");
         printf("04 - Atualizar situacao\n");
-        printf("05 - Registrar participante\n");
+        printf("05 - Registrar participantes\n");
         printf("06 - Gerar resumo\n");
-        printf("07 - Sair do sistema\n");
-        printf("Digite uma opcao: ");
-        scanf("%d", &opcao);
-
+        printf("00 - Sair do sistema\n");
+        opcao = lerInteiro("Digite uma opcao: ");
         switch (opcao) {
-            case 1:
-                cadastrar();
-                break;
-
-            case 2:
-                listar();
-                break;
-
-            case 3:
-                pesquisar();
-                break;
-
-            case 4:
-                atualizar();
-                break;
-
-            case 5:
-                registrar();
-                break;
-
-            case 6:
-                resumo();
-                break;
-
-            case 7:
-                printf("\nSaindo do sistema...\n");
-                break;
-
-            default:
-                printf("\nOpcao invalida!\n");
-                system("pause");
-                break;
+            case 1: cadastrar(); break;
+            case 2: listar(); break;
+            case 3: pesquisar(); break;
+            case 4: atualizar(); break;
+            case 5: registrar(); break;
+            case 6: resumo(); break;
+            case 0: printf("Saindo do sistema...\n"); break;
+            default: printf("Opcao invalida!\n"); system("pause"); break;
         }
     }
-
     return 0;
 }
