@@ -1,59 +1,66 @@
 # PSE em Ação
 
-Sistema de Planejamento e Acompanhamento de Ações de Saúde na Escola — tema aplicado: **prevenção ao uso de álcool e outras drogas**.
-Atividade Extensionista Prática (AEP) — UniCesumar — Engenharia de Software e Análise e Desenvolvimento de Sistemas.
+**Sistema de Planejamento e Acompanhamento de Ações de Saúde na Escola** — tema: prevenção ao uso de álcool e outras drogas.
+AEP — UNICESUMAR · Engenharia de Software e Análise e Desenvolvimento de Sistemas · 2026
 
-Programa de terminal em linguagem C que permite à equipe intersetorial (IntegraPSE) planejar, registrar e acompanhar ações coletivas de prevenção nas escolas do Programa Saúde na Escola (PSE).
-O sistema **não armazena dados individuais ou sensíveis de estudantes**; os dados ficam apenas em memória durante a execução.
+## Sobre o projeto
 
-## Funcionalidades (menu)
+Programa em C, executado em terminal, que ajuda a equipe intersetorial (IntegraPSE) a planejar, registrar e acompanhar ações coletivas de prevenção nas escolas do Programa Saúde na Escola (PSE). Usa só dados fictícios e coletivos: **nenhum dado individual de estudante é pedido ou guardado**, e tudo fica em memória durante a execução.
 
-| Opção | Função |
-|---|---|
-| 1 | Cadastrar ação (código, escola, tema, data DD/MM/AAAA, público-alvo, responsável, quantidade prevista) |
-| 2 | Listar ações |
-| 3 | Pesquisar ação por código, escola ou tema |
-| 4 | Atualizar situação (planejada, realizada, cancelada) |
-| 5 | Registrar/corrigir participantes de ação realizada |
-| 6 | Gerar resumo geral (ações por situação, participantes, percentual de participação) |
-| 0 | Sair |
+## Funcionalidades
 
-Validações: código duplicado ou inválido, campos vazios, data inexistente, quantidades negativas ou nulas, opção inexistente, registro inexistente e limite de 50 ações.
+| Opção | Funcionalidade | Requisito |
+|---|---|---|
+| 1 | Cadastrar ação (código, escola, tema, data, público-alvo, responsável, quantidade prevista) | RF01 |
+| 2 | Listar ações | RF02 |
+| 3 | Pesquisar por código, escola ou tema | RF03 |
+| 4 | Atualizar situação (planejada, realizada, cancelada) | RF04 |
+| 5 | Registrar ou corrigir participantes de ação realizada | RF07 |
+| 6 | Resumo geral (ações por situação, participantes, percentual) | RF05 |
+| 7 | Sair | — |
+
+Validações (RF06): código duplicado ou inválido, data inexistente (DD/MM/AAAA), quantidades negativas ou nulas, opção inválida, cadastro não localizado e limite de 50 ações. O percentual de participação é calculado sobre as ações realizadas.
 
 ## Compilação e execução
 
-Requisito: compilador C com suporte a C11 (gcc).
+Requisito: gcc (C11).
 
 ```bash
-# Linux / macOS
-gcc -std=c11 -Wall -Wextra -pedantic -o pse src/main.c   # ou: make
-./pse
-
-# Windows (MinGW)
-gcc -std=c11 -o pse.exe src/main.c
-pse.exe
+gcc -std=c11 -o pse src/main.c    # Windows: pse.exe | Linux/macOS: ./pse
 ```
 
-## Testes
+O programa usa `system("cls")` e `system("pause")` (Windows); em Linux/macOS essas chamadas não fazem nada. As mensagens não usam acentos.
 
-```bash
-make test        # executa 23 casos de teste em pseudo-terminal (Linux/macOS; requer Python 3)
+## Exemplo de uso
+
+```
+Digite uma opcao: 1
+=== CADASTRAR ACAO ===
+Digite o codigo: 101
+Digite a escola: Escola Municipal Aurora
+Digite o tema: Prevencao ao uso de alcool
+Digite a data prevista (DD/MM/AAAA): 20/11/2026
+Digite o publico-alvo: 8o ano
+Digite o responsavel: Ana Souza
+Digite a quantidade prevista de participantes: 40
+
+Cadastro realizado com sucesso!
 ```
 
 ## Estrutura
 
 ```
-src/main.c        código-fonte
-tests/            testes automatizados e geradores de imagens/diagramas
-docs/             documento final (.docx), roteiro do vídeo e imagens
-Makefile
+src/main.c    código-fonte
+docs/         documentos das duas entregas, roteiro do vídeo e imagens
+tests/        testes automatizados (opcional: make test, Linux/macOS com Python 3)
 ```
 
-## Documentação
+O documento final (`docs/PSE_em_Acao_2a_Entrega.docx`) traz requisitos, fluxogramas, casos de uso, testes (23 casos aprovados), manual e considerações finais.
 
-- `docs/PSE_em_Acao_2a_Entrega.docx`: requisitos atualizados, fluxogramas, casos de uso, testes, manual do usuário e considerações finais.
-- `docs/roteiro_video.md`: roteiro do vídeo de apresentação (até 7 minutos).
+## Limitações
 
-## Grupo
+Dados só em memória, máximo de 50 ações, sem edição de cadastro nem exclusão, e busca por escola/tema diferencia maiúsculas.
 
-[Nomes e RAs dos integrantes]
+## Integrantes
+
+Luiz Eduardo Santos Silva · Romulo Sotti Demito · Lucas Pescaroli Bastos
