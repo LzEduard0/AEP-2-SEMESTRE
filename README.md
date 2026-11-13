@@ -21,16 +21,6 @@ Programa em C, executado em terminal, que ajuda a equipe intersetorial (IntegraP
 
 Validações (RF06): código duplicado ou inválido, data inexistente (DD/MM/AAAA), quantidades negativas ou nulas, opção inválida, cadastro não localizado e limite de 50 ações. O percentual de participação é calculado sobre as ações realizadas.
 
-## Compilação e execução
-
-Requisito: gcc (C11).
-
-```bash
-gcc -std=c11 -o pse src/main.c    # Windows: pse.exe | Linux/macOS: ./pse
-```
-
-O programa usa `system("cls")` e `system("pause")` (Windows); em Linux/macOS essas chamadas não fazem nada. As mensagens não usam acentos.
-
 ## Exemplo de uso
 
 ```
