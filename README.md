@@ -37,15 +37,7 @@ Digite a quantidade prevista de participantes: 40
 Cadastro realizado com sucesso!
 ```
 
-## Estrutura
-
-```
-src/main.c    código-fonte
-docs/         documentos das duas entregas, roteiro do vídeo e imagens
-tests/        testes automatizados (opcional: make test, Linux/macOS com Python 3)
-```
-
-O documento final (`docs/PSE_em_Acao_2a_Entrega.docx`) traz requisitos, fluxogramas, casos de uso, testes (23 casos aprovados), manual e considerações finais.
+O documento final (`PSE_em_Acao_2a_Entrega.docx`) traz requisitos, fluxogramas, casos de uso, testes (23 casos aprovados), manual e considerações finais.
 
 ## Integrantes
 
