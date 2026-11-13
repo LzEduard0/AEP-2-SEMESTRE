@@ -47,10 +47,6 @@ tests/        testes automatizados (opcional: make test, Linux/macOS com Python 
 
 O documento final (`docs/PSE_em_Acao_2a_Entrega.docx`) traz requisitos, fluxogramas, casos de uso, testes (23 casos aprovados), manual e considerações finais.
 
-## Limitações
-
-Dados só em memória, máximo de 50 ações, sem edição de cadastro nem exclusão, e busca por escola/tema diferencia maiúsculas.
-
 ## Integrantes
 
 Luiz Eduardo Santos Silva · Romulo Sotti Demito · Lucas Pescaroli Bastos
